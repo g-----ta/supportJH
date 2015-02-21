@@ -23,11 +23,14 @@
 	</style>
 	
 </head>
-git@github.com:g-----ta/supportJH.git<body>
+<body>
 	<h1>文字数チェック</h1>
 	<textarea id="memo"></textarea>
 	<div id="count">0</div>
-	<p><input type="button" id="clear" value="消去"></p>
+	<p>
+		<input type="button" id="clear" value="消去">
+		<input type="button" id="full" value="集中モード">
+	</p>
 	
 	<div class="container">
 		<div id="text_q"></div>
@@ -37,9 +40,57 @@ git@github.com:g-----ta/supportJH.git<body>
 	(function() {
 		var memo = document.getElementById('memo');
 		var count = document.getElementById('count');
-		var clear = document.getElementById('clear');
 		
+		function ElementRequestFullscreen(element){
+			var list = [
+				"requestFullscreen",
+				"webkitRequestFullScreen",
+				"mozRequestFullScreen",
+				"msRequestFullscreen"
+			];
+			var i;
+			var num = list.length;
+			for(i=0;i < num;i++){
+				if(element[list[i]]){
+					element[list[i]]();
+					return true;
+				}
+			}
+			return false;
+		}
 		
+		function DocumentExitFullscreen(document_obj){
+			var list = [
+				"exitFullscreen",
+				"webkitExitFullscreen",
+				"mozCancelFullScreen",
+				"msExitFullscreen"
+			];
+			var i;
+			var num = list.length;
+			for(i=0;i < num;i++){
+				if(document_obj[list[i]]){
+					document_obj[list[i]]();
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		var full_screen = document.getElementById('full');
+		var normal_screen = document.getElementById('normal');
+		
+		if(window.addEventListener) {
+			full_screen.addEventListener("click", function (e) {
+				ElementRequestFullscreen(memo);
+			});
+			
+			memo.addEventListener("dblclick", function (e) {
+				DocumentExitFullscreen(document);
+				e.stopPropagation();
+			});
+			
+		}
 		
 		function countChars(textarea) {
 			count.innerHTML = textarea.value.length;
